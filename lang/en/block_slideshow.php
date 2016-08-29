@@ -61,3 +61,4 @@ $string['bottomleft'] = 'Bottom Left';
 $string['bottom'] = 'Bottom';
 $string['bottomright'] = 'Bottom Right';
 $string['fullsize'] = 'Slideshow Fullsize';
+$string['enablejavascriptformore'] = 'Enable Javascript to view other slides';
