@@ -37,12 +37,11 @@ class block_slideshow_edit_form extends block_edit_form {
         $elements[] = $mform->createElement('checkbox', 'config_enabled', get_string('configslide', 'block_slideshow'), get_string('configslideenabled', 'block_slideshow'));
         $elementsoptions['config_enabled']['checked'] = false;
 
-        $fileoptions = array('subdirs'=>false,
+        $fileoptions = array('subdirs'=>0,
                              'maxfiles'=>1,
                              'maxbytes'=>$COURSE->maxbytes,
                              'accepted_types'=>'web_image',
                              'return_types'=>FILE_INTERNAL);
-
         $elements[] = $mform->createElement('filemanager', 'config_imageslide', get_string('configslidefile', 'block_slideshow'), null,  $fileoptions);
         $elementsoptions['config_imageslide']['disabledif'] = array('enabled', 'notchecked');
 
@@ -130,11 +129,9 @@ class block_slideshow_edit_form extends block_edit_form {
     function set_data($defaults) {
         global $COURSE;
 
-        if (!$this->block->user_can_edit()) {
+        if ($this->block->user_can_edit()) {
             if  (!empty($this->block->config->slides)) {
                  $slidenumber = $this->block->config->slides;
-                 $defaults->config_slides = $slidenumber;
-                 unset($this->block->config->slides);
 
                  $fileoptions = array('subdirs'=>false,
                                       'maxfiles'=>1,
@@ -145,71 +142,52 @@ class block_slideshow_edit_form extends block_edit_form {
                  $slides = array();
                  for ($i=0; $i<$slidenumber; $i++) {
                      $slides[$i] = new stdClass();
-                     if  (!empty($this->block->config->{'enabled_'.$i})) {
-                          $slides[$i]->enabled = $this->block->config->{'enabled_'.$i};
-                          $defaults->{'config_enabled_'.$i} = $slides[$i]->enabled;
-                          unset($this->block->config->{'enabled_'.$i});
+                     if  (!empty($this->block->config->enabled[$i])) {
+                          $slides[$i]->enabled = $this->block->config->enabled[$i];
                      }
                      
-                     if  (!empty($this->block->config->{'imageslide_'.$i})) {
-                          $draftitemid = file_get_submitted_draft_itemid('config_imageslide_'.$i);
+                     if  (!empty($this->block->config->imageslide[$i])) {
+                          $draftitemid = '';
                           file_prepare_draft_area($draftitemid, $this->block->context->id, 'block_slideshow', 'slides', $i, $fileoptions);
+                          $this->block->config->imageslide[$i] = $draftitemid;
                           $slides[$i]->imageslide = $draftitemid;
-                          $defaults->{'config_imageslide_'.$i} = $slides[$i]->imageslide;
-                          unset($this->block->config->{'imageslide_'.$i});
                      }
 
-                     if  (!empty($this->block->config->{'imageposition_'.$i})) {
-                          $slides[$i]->enabled = $this->block->config->{'imageposition_'.$i};
-                          $defaults->{'config_imageposition_'.$i} = $slides[$i]->imageposition;
-                          unset($this->block->config->{'imageposition_'.$i});
+                     if  (!empty($this->block->config->imageposition[$i])) {
+                          $slides[$i]->imageposition = $this->block->config->imageposition[$i];
                      }
                      
-                     if  (!empty($this->block->config->{'title_'.$i})) {
-                          $slides[$i]->title = $this->block->config->{'title_'.$i};
-                          $defaults->{'config_title_'.$i} = format_string($slides[$i]->title, true, $this->page->context);
-                          unset($this->block->config->{'title_'.$i});
+                     if  (!empty($this->block->config->title[$i])) {
+                          $slides[$i]->title = $this->block->config->title[$i];
                      }
                      
-                     if  (!empty($this->block->config->{'caption_'.$i})) {
-                          $slides[$i]->caption = $this->block->config->{'caption_'.$i};
-                          $defaults->{'config_caption_'.$i} = format_text($slides[$i]->caption, true, $this->page->context);
-                          unset($this->block->config->{'caption_'.$i});
+                     if  (!empty($this->block->config->caption[$i])) {
+                          $slides[$i]->caption = $this->block->config->caption[$i];
                      }
                      
-                     if  (!empty($this->block->config->{'captionposition_'.$i})) {
-                          $slides[$i]->captionposition = $this->block->config->{'captionposition_'.$i};
-                          $defaults->{'config_captionposition_'.$i} = $slides[$i]->captionposition;
-                          unset($this->block->config->{'captionposition_'.$i});
+                     if  (!empty($this->block->config->captionposition[$i])) {
+                          $slides[$i]->captionposition = $this->block->config->captionposition[$i];
                      }
                      
-                     if  (!empty($this->block->config->{'link_'.$i})) {
-                          $slides[$i]->link = $this->block->config->{'link_'.$i};
-                          $defaults->{'config_link_'.$i} = $slides[$i]->link;
-                          unset($this->block->config->{'link_'.$i});
+                     if  (!empty($this->block->config->link[$i])) {
+                          $slides[$i]->link = $this->block->config->link[$i];
                      }
                      
                  }
             }
             if  (!empty($this->block->config->showslides)) {
                  $showslides = $this->block->config->showslides;
-                 $defaults->config_showslides = $showslides;
-                 unset($this->block->config->text);
             }
             if  (!empty($this->block->config->firstslide)) {
                  $firstslide = $this->block->config->firstslide;
-                 $defaults->config_firstslide = $firstslide;
-                 unset($this->block->config->firstslide);
             }
             if  (!empty($this->block->config->transition)) {
                  $transition = $this->block->config->transition;
-                 $defaults->config_transition = $transition;
-                 unset($this->block->config->transition);
             }
         }
 
         parent::set_data($defaults);
-
+/*
         if (!isset($this->block->config)) {
             $this->block->config = new stdClass();
         }
@@ -217,7 +195,29 @@ class block_slideshow_edit_form extends block_edit_form {
         if (isset($slidenumber)) {
             $this->block->config->slides = $slidenumber;
             if (isset($slides)) {
-                $this->block->config->slideimage = $slides;
+                for ($i=0; $i<$slidenumber; $i++) {
+                     if (isset($slides[$i]->enabled)) {
+                         $this->block->config->enabled[$i] = $slides[$i]->enabled;
+                     }
+                     if (isset($slides[$i]->imageslide)) {
+                         $this->block->config->imageslide[$i] = $slides[$i]->imageslide;
+                     }
+                     if (isset($slides[$i]->imageposition)) {
+                         $this->block->config->imageposition[$i] = $slides[$i]->imageposition;
+                     }
+                     if (isset($slides[$i]->title)) {
+                         $this->block->config->title[$i] = $slides[$i]->title;
+                     }
+                     if (isset($slides[$i]->caption)) {
+                         $this->block->config->caption[$i] = $slides[$i]->caption;
+                     }
+                     if (isset($slides[$i]->captionposition)) {
+                         $this->block->config->captionposition[$i] = $slides[$i]->captionposition;
+                     }
+                     if (isset($slides[$i]->link)) {
+                         $this->block->config->link[$i] = $slides[$i]->link;
+                     }
+                }
             }
         }
         if (isset($showslides)) {
@@ -227,9 +227,9 @@ class block_slideshow_edit_form extends block_edit_form {
             $this->block->config->firstslide = $firstslide;
         }
         if (isset($transition)) {
-            $this->block->config->transition = $title;
+            $this->block->config->transition = $transition;
         }
 
+*/
     }
-
 }
