@@ -210,38 +210,40 @@ class block_slideshow extends block_base {
                     if (isset($this->config->transition)) {
                         $transition = $this->config->transition;
                     }
+                    $strprev = get_string('enablejavascriptformore', 'block_slideshow');
+                    $strnext = get_string('enablejavascriptformore', 'block_slideshow');
 
                     switch ($transition) {
                         case 'fade':
                         case 'slideLeft':
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/left', get_string('prev')),
+                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/left', $strprev),
                                                                      array('id' => 'block_slideshow_prev_'.$ssid,
                                                                            'class' => 'block_slideshow_left'));
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/right', get_string('next')),
+                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/right', $strnext),
                                                                      array('id' => 'block_slideshow_next_'.$ssid,
                                                                            'class' => 'block_slideshow_right'));
 			break;
                         case 'slideRight':
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/left', get_string('next')),
+                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/left', $strnext),
                                                                      array('id' => 'block_slideshow_next_'.$ssid,
                                                                            'class' => 'block_slideshow_left'));
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/right', get_string('prev')),
+                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/right', $strprev),
                                                                      array('id' => 'block_slideshow_prev_'.$ssid,
                                                                            'class' => 'block_slideshow_right'));
                         break;
                         case 'slideUp':
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/up', get_string('prev')),
+                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/up', $strprev),
                                                                      array('id' => 'block_slideshow_prev_'.$ssid,
                                                                            'class' => 'block_slideshow_up'));
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/down', get_string('next')),
+                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/down', $strnext),
                                                                      array('id' => 'block_slideshow_next_'.$ssid,
                                                                            'class' => 'block_slideshow_down'));
 			break;
                         case 'slideDown':
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/up', get_string('next')),
+                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/up', $strnext),
                                                                      array('id' => 'block_slideshow_next_'.$ssid,
                                                                            'class' => 'block_slideshow_up'));
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/down', get_string('prev')),
+                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/down', $strprev),
                                                                      array('id' => 'block_slideshow_prev_'.$ssid,
                                                                            'class' => 'block_slideshow_down'));
                         break;
@@ -254,9 +256,14 @@ class block_slideshow extends block_base {
                                  array('class' => 'block_slideshow_page block_slideshow_page_'.$ssid.$firstslide.' '.$transition));
                     }
                     $this->content->text .= '</ul>';
+                    $this->content->text .= html_writer::start_tag('noscript');
+                    $this->content->text .= html_writer::tag('span', get_string('enablejavascriptformore', 'block_slideshow'));
+                    $this->content->text .= html_writer::end_tag('noscript');
 
                     $script = 'Y.use(\'moodle-block_slideshow-slideshow\', function(Y){'; 
                     $script .= 'var slideshow'.$ssid.' = new Y.Slideshow({ srcNode: \'#block_slideshow_'.$ssid.'\',  previousButton:\'#block_slideshow_prev_'.$ssid.'\', nextButton:\'#block_slideshow_next_'.$ssid.'\', pages:\'.block_slideshow_page_'.$ssid.'\', currentIndex:'.$this->config->firstslide.', pauseOnChange: false, transition: Y.Slideshow.PRESETS.'.$transition.'}); slideshow'.$this->instance->id.'.render(); ';
+                    $script .= 'Y.one(\'#block_slideshow_prev_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('prev').'\');';
+                    $script .= 'Y.one(\'#block_slideshow_next_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('next').'\');';
                     $script .= ' });';
                     $PAGE->requires->js_init_code($script);
                 }
@@ -329,6 +336,14 @@ class block_slideshow extends block_base {
                 $saved++;
                 
             }
+        }
+        for ($i=$saved; $i<$data->slides; $i++) {
+            file_save_draft_area_files($data->imageslide[$i],
+                                       $this->context->id,
+                                       'block_slideshow',
+                                       'slides',
+                                       $i,
+                                       $fileoptions);
         }
         $config->slides = $saved;
 
