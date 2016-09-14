@@ -262,8 +262,8 @@ class block_slideshow extends block_base {
 
                     $script = 'Y.use(\'moodle-block_slideshow-slideshow\', function(Y){'; 
                     $script .= 'var slideshow'.$ssid.' = new Y.Slideshow({ srcNode: \'#block_slideshow_'.$ssid.'\',  previousButton:\'#block_slideshow_prev_'.$ssid.'\', nextButton:\'#block_slideshow_next_'.$ssid.'\', pages:\'.block_slideshow_page_'.$ssid.'\', currentIndex:'.$this->config->firstslide.', pauseOnChange: false, transition: Y.Slideshow.PRESETS.'.$transition.'}); slideshow'.$this->instance->id.'.render(); ';
-                    $script .= 'Y.one(\'#block_slideshow_prev_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('prev').'\');';
-                    $script .= 'Y.one(\'#block_slideshow_next_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('next').'\');';
+                    $script .= 'if (Y.one(\'#block_slideshow_prev_'.$ssid.' img\') != null) { Y.one(\'#block_slideshow_prev_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('prev').'\');}';
+                    $script .= 'if (Y.one(\'#block_slideshow_next_'.$ssid.' img\') != null) { Y.one(\'#block_slideshow_next_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('next').'\');}';
                     $script .= ' });';
                     $PAGE->requires->js_init_code($script);
                 }

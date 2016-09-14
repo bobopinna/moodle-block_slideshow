@@ -1100,34 +1100,36 @@ YUI.add('moodle-block_slideshow-slideshow', function(Y) {
 				
 			});
 
-			this.get('slides').item(this.get('currentIndex')).setStyles({'visibility': 'visible', 'opacity': '1', 'zIndex': '2'});
-
-			height = 'offsetHeight';
-			// Slide size:
-			this.set('_slideWidth', this.get('contentBox').get('offsetWidth'));
-
-		        maxheight = 0;
-                        maxheight = getMaxHeight(this.get('contentBox'), maxheight);
-			newheight = this.get('contentBox').get('offsetWidth') * maxheight / this.get('_slideWidth');
-			this.get('contentBox').setStyles({'height': newheight+'px' });
-			
-			this.get('contentBox').get('children').setStyles( {'height': newheight+'px'} );
-			this.set('_slideHeight', this.get('contentBox').get(height));
-
-			// Pages:
-			
-			if( !Y.Lang.isNull($pages) ){
+                        if ($count > 0) {
+				this.get('slides').item(this.get('currentIndex')).setStyles({'visibility': 'visible', 'opacity': '1', 'zIndex': '2'});
+	
+				height = 'offsetHeight';
+				// Slide size:
+				this.set('_slideWidth', this.get('contentBox').get('offsetWidth'));
+	
+			        maxheight = 0;
+	                        maxheight = getMaxHeight(this.get('contentBox'), maxheight);
+				newheight = this.get('contentBox').get('offsetWidth') * maxheight / this.get('_slideWidth');
+				this.get('contentBox').setStyles({'height': newheight+'px' });
 				
-				$pages.addClass( this.getClassName('page') );
+				this.get('contentBox').get('children').setStyles( {'height': newheight+'px'} );
+				this.set('_slideHeight', this.get('contentBox').get(height));
+	
+				// Pages:
 				
-			}
-			
-			// Autoplay:
-			
-			if( this.get('autoplay') ){
+				if( !Y.Lang.isNull($pages) ){
+					
+					$pages.addClass( this.getClassName('page') );
+					
+				}
 				
-				this.play();
+				// Autoplay:
 				
+				if( this.get('autoplay') ){
+					
+					this.play();
+					
+				}
 			}
 			
 		},
