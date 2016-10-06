@@ -1,6 +1,7 @@
 .block_slideshow_slideshow {
     overflow: hidden;
-    position: relative; 
+    position: relative;
+    font-size: 1vw;
 }
 
 .block_slideshow_slides {
@@ -22,11 +23,6 @@
      background-color: rgba(255, 255, 255, 0.7);
      padding: .75em;
      border: thin solid #cccccc;
-/*
-     border-radius: 1em;
-     -webkit-border-radius: 1em;
-     -moz-border-radius: 1em;
-*/
      display:block;
      text-align: left;
      font-size: 1.2em;
@@ -38,14 +34,12 @@
 
 .block_slideshow_caption h1 {
      font-size: 1.8em;
-     font-size: 1.6vw;
      line-height: 1.2em;
      margin: 0;
 }
 
 .block_slideshow_caption p {
      font-size: 1em;
-     font-size: 1vw;
      margin: 0;
      overflow: hidden;
 }
@@ -91,7 +85,6 @@
     padding-top: 25%;
     padding-left: 25%;
     line-height: 1.5em;
-    /*text-align: center;*/
 }
 
 .block_slideshow_up {
@@ -116,12 +109,10 @@
 
 .block_slideshow_pages {
      position: absolute;
-     width: 100%;
+     width: auto;
      margin: 0;
      padding: 0;
-     text-align: right;
-     right: .5em;
-     top: .5em;
+     text-align: center;
      z-index: 3;
 }
 
@@ -134,7 +125,8 @@
      -moz-border-radius: 50%;
      width: 1em;
      height: 1em;
-     margin: .1em;
+     margin-left: .15em;
+     margin-right: .15em;
 }
 
 .block_slideshow_page.slideRight,

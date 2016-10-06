@@ -67,12 +67,20 @@ class block_slideshow extends block_base {
             $this->config->showslides = 'always';
         }
 
+        if (!isset($this->config->interval)) {
+            $this->config->interval = 5;
+        }
+
         if (!isset($this->config->firstslide)) {
             $this->config->firstslide = 1;
         }
 
         if (!isset($this->config->transition)) {
             $this->config->transition = 'fade';
+        }
+
+        if (!isset($this->config->transitionduration)) {
+            $this->config->transitionduration = 0.5;
         }
 
         if (($this->config->showslides == 'beforelogin') && (isloggedin())) {
@@ -248,8 +256,40 @@ class block_slideshow extends block_base {
                                                                            'class' => 'block_slideshow_down'));
                         break;
                     }
+                    
+                    $pagerstyle = 'bottom: .5em; right: .5em';
+                    if (isset($this->config->pagerposition)) {
+                        switch ($this->config->pagerposition) {
+                            case 'topleft':
+                                $pagerstyle = 'top: .5em; left: .5em';
+                            break;
+                            case 'top':
+                                $pagerstyle = 'top: .5em; left: 45%; right: 45%; min-width: 10%';
+                            break;
+                            case 'topright':
+                                $pagerstyle = 'top: .5em; right: .5em';
+                            break;
+                            case 'left':
+                                $pagerstyle = 'left: .5em; top: 40%; width: 1em';
+                            break;
+                            case 'right':
+                                $pagerstyle = 'right: .5em; top: 40%; width: 1em';
+                            break;
+                            case 'bottomleft':
+                                $pagerstyle = 'bottom: .5em; left: .5em';
+                            break;
+                            case 'bottom':
+                                $pagerstyle = 'bottom: .5em; left: 45%; right: 45%; min-width: 10%';
+                            break;
+                            case 'bottomright':
+                                $pagerstyle = 'bottom: .5em; right: .5em';
+                            break;
+                        }
+                    }
+
                     $this->content->text .= html_writer::start_tag('ul', array('class' => 'block_slideshow_pages',
-                                                                               'id' => 'block_slideshow_pages_'.$ssid));
+                                                                               'id' => 'block_slideshow_pages_'.$ssid,
+                                                                               'style' => $pagerstyle));
                     for ($i=0; $i<$slidesactive; $i++) {
                         $firstslide = ($i == $this->config->firstslide)?' yui3-slideshow-active':'';
                         $this->content->text .= html_writer::empty_tag('li', 
@@ -261,7 +301,7 @@ class block_slideshow extends block_base {
                     $this->content->text .= html_writer::end_tag('noscript');
 
                     $script = 'Y.use(\'moodle-block_slideshow-slideshow\', function(Y){'; 
-                    $script .= 'var slideshow'.$ssid.' = new Y.Slideshow({ srcNode: \'#block_slideshow_'.$ssid.'\',  previousButton:\'#block_slideshow_prev_'.$ssid.'\', nextButton:\'#block_slideshow_next_'.$ssid.'\', pages:\'.block_slideshow_page_'.$ssid.'\', currentIndex:'.$this->config->firstslide.', pauseOnChange: false, transition: Y.Slideshow.PRESETS.'.$transition.'}); slideshow'.$this->instance->id.'.render(); ';
+                    $script .= 'var slideshow'.$ssid.' = new Y.Slideshow({ srcNode: \'#block_slideshow_'.$ssid.'\',  previousButton:\'#block_slideshow_prev_'.$ssid.'\', nextButton:\'#block_slideshow_next_'.$ssid.'\', pages:\'.block_slideshow_page_'.$ssid.'\', currentIndex:'.$this->config->firstslide.', pauseOnChange: false, duration:'.$this->config->transitionduration.', interval:'.$this->config->interval.', transition: Y.Slideshow.PRESETS.'.$transition.'}); slideshow'.$this->instance->id.'.render(); ';
                     $script .= 'if (Y.one(\'#block_slideshow_prev_'.$ssid.' img\') != null) { Y.one(\'#block_slideshow_prev_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('prev').'\');}';
                     $script .= 'if (Y.one(\'#block_slideshow_next_'.$ssid.' img\') != null) { Y.one(\'#block_slideshow_next_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('next').'\');}';
                     $script .= ' });';

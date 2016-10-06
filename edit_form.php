@@ -116,6 +116,14 @@ class block_slideshow_edit_form extends block_edit_form {
         $mform->setDefault('config_firstslide', 'always');
 
         $choices = array();
+        for ($i=1; $i<=60; $i++) {
+            $choices[$i] = $i;
+        }
+        $mform->addElement('select', 'config_interval', get_string('configinterval', 'block_slideshow'), $choices );
+        $mform->setType('config_interval', PARAM_INT);
+        $mform->setDefault('config_interval', 5);
+
+        $choices = array();
         $choices['fade'] = get_string('fade', 'block_slideshow');
         $choices['slideUp'] = get_string('slideup', 'block_slideshow');
         $choices['slideRight'] = get_string('slideright', 'block_slideshow');
@@ -124,6 +132,26 @@ class block_slideshow_edit_form extends block_edit_form {
         $mform->addElement('select', 'config_transition', get_string('configtransition', 'block_slideshow'), $choices);
         $mform->setDefault('config_transition', 'fade');
         
+        $choices = array();
+        for ($i=1; $i<=20; $i++) {
+            $value =  $i/4;
+            $choices["$value"] = $value;
+        }
+        $mform->addElement('select', 'config_transitionduration', get_string('configtransitionduration', 'block_slideshow'), $choices);
+        $mform->setType('config_transitionduration', PARAM_FLOAT);
+        $mform->setDefault('config_transitionduration', '0.5');
+
+        $choices = array();
+        $choices['topleft'] = get_string('topleft', 'block_slideshow');
+        $choices['top'] = get_string('top', 'block_slideshow');
+        $choices['topright'] = get_string('topright', 'block_slideshow');
+        $choices['left'] = get_string('left', 'block_slideshow');
+        $choices['right'] = get_string('right', 'block_slideshow');
+        $choices['bottomleft'] = get_string('bottomleft', 'block_slideshow');
+        $choices['bottom'] = get_string('bottom', 'block_slideshow');
+        $choices['bottomright'] = get_string('bottomright', 'block_slideshow');
+        $mform->addElement('select', 'config_pagerposition', get_string('configpagerposition', 'block_slideshow'), $choices);
+        $mform->setDefault('config_pagerposition', 'bottomright');
     }
 
     function set_data($defaults) {
@@ -178,11 +206,20 @@ class block_slideshow_edit_form extends block_edit_form {
             if  (!empty($this->block->config->showslides)) {
                  $showslides = $this->block->config->showslides;
             }
+            if  (!empty($this->block->config->interval)) {
+                 $showslides = $this->block->config->interval;
+            }
             if  (!empty($this->block->config->firstslide)) {
                  $firstslide = $this->block->config->firstslide;
             }
             if  (!empty($this->block->config->transition)) {
                  $transition = $this->block->config->transition;
+            }
+            if  (!empty($this->block->config->transitiontime)) {
+                 $transition = $this->block->config->transitiontime;
+            }
+            if  (!empty($this->block->config->pagerposition)) {
+                 $transition = $this->block->config->pagerposition;
             }
         }
 

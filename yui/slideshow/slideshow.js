@@ -1165,10 +1165,12 @@ YUI.add('moodle-block_slideshow-slideshow', function(Y) {
 	function addResizeHandler(slideshow) {
 		window.onresize = function(e){
 			newheight = slideshow.get('contentBox').get('offsetWidth') * slideshow.get('_slideHeight') / slideshow.get('_slideWidth');
+			newfontsize = slideshow.get('contentBox').get('offsetWidth')/slideshow.get('contentBox').get('winWidth');
 			slideshow.get('contentBox').setStyles({'height': newheight+'px' });
 			slideshow.get('contentBox').get('children').each(function( $node ){
 		  		$node.setStyles({'height': newheight+'px'});
 			});
+			slideshow.get('contentBox').parent().parent().setStyles({'font-size': newfontsize+'vw'});
 		};
 	}
 
