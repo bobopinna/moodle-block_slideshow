@@ -113,7 +113,7 @@ class block_slideshow_edit_form extends block_edit_form {
             $choices[$i-1] = $i;
         }
         $mform->addElement('select', 'config_firstslide', get_string('configfirstslide', 'block_slideshow'), $choices );
-        $mform->setDefault('config_firstslide', 'always');
+        $mform->setDefault('config_firstslide', 1);
 
         $choices = array();
         for ($i=1; $i<=60; $i++) {
