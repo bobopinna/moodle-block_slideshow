@@ -33,7 +33,7 @@ class block_slideshow extends block_base {
     }
 
     function applicable_formats() {
-        return array('all' => true, 
+        return array('all' => true,
                      'my' => false);
     }
 
@@ -110,11 +110,7 @@ class block_slideshow extends block_base {
                     }
 
                     if (!empty($this->config->title[$i]) || !empty($this->config->caption[$i]) || !empty($imagefile)) {
-                        $slidestyle = ($i == $this->config->firstslide)
-                                      ?'display: block; position:static; width: 100%'
-                                      :'width: 100%';
-                        $slidestext .= html_writer::start_tag('div', array('class' => 'block_slideshow_slide',
-                                                                                      'style' => $slidestyle));
+                        $slidestext .= html_writer::start_tag('div', array('class' => 'block_slideshow_slide'));
                         if (!empty($imagefile)) {
                             $imagestyle = 'width: 100%';
                             if (isset($this->config->imageposition[$i])) {
@@ -218,9 +214,9 @@ class block_slideshow extends block_base {
                     if (isset($this->config->transition)) {
                         $transition = $this->config->transition;
                     }
+/*
                     $strprev = get_string('enablejavascriptformore', 'block_slideshow');
                     $strnext = get_string('enablejavascriptformore', 'block_slideshow');
-
                     switch ($transition) {
                         case 'fade':
                         case 'slideLeft':
@@ -257,57 +253,35 @@ class block_slideshow extends block_base {
                         break;
                     }
                     
-                    $pagerstyle = 'bottom: .5em; right: .5em';
-                    if (isset($this->config->pagerposition)) {
-                        switch ($this->config->pagerposition) {
-                            case 'topleft':
-                                $pagerstyle = 'top: .5em; left: .5em';
-                            break;
-                            case 'top':
-                                $pagerstyle = 'top: .5em; left: 45%; right: 45%; min-width: 10%';
-                            break;
-                            case 'topright':
-                                $pagerstyle = 'top: .5em; right: .5em';
-                            break;
-                            case 'left':
-                                $pagerstyle = 'left: .5em; top: 40%; width: 1em';
-                            break;
-                            case 'right':
-                                $pagerstyle = 'right: .5em; top: 40%; width: 1em';
-                            break;
-                            case 'bottomleft':
-                                $pagerstyle = 'bottom: .5em; left: .5em';
-                            break;
-                            case 'bottom':
-                                $pagerstyle = 'bottom: .5em; left: 45%; right: 45%; min-width: 10%';
-                            break;
-                            case 'bottomright':
-                                $pagerstyle = 'bottom: .5em; right: .5em';
-                            break;
-                        }
-                    }
-
-                    $this->content->text .= html_writer::start_tag('ul', array('class' => 'block_slideshow_pages',
-                                                                               'id' => 'block_slideshow_pages_'.$ssid,
-                                                                               'style' => $pagerstyle));
                     for ($i=0; $i<$slidesactive; $i++) {
                         $firstslide = ($i == $this->config->firstslide)?' yui3-slideshow-active':'';
                         $this->content->text .= html_writer::empty_tag('li', 
                                  array('class' => 'block_slideshow_page block_slideshow_page_'.$ssid.$firstslide.' '.$transition));
                     }
                     $this->content->text .= '</ul>';
-                    $this->content->text .= html_writer::start_tag('noscript');
-                    $this->content->text .= html_writer::tag('span', get_string('enablejavascriptformore', 'block_slideshow'));
-                    $this->content->text .= html_writer::end_tag('noscript');
+*/
+                    $params = array();
+                    $params['initialSlide'] = $this->config->firstslide;
+                    $params['autoplay'] = true;
+                    $params['autoplaySpeed'] = $this->config->interval * 1000;
+                    $params['speed'] = $this->config->transitionduration * 1000;
+                    $params['dots'] = true;
+                    $params['dotsClass'] = 'slick-dots slick-dots-' . $this->config->pagerposition;
+                    $params['infinite'] = true;
+                    if ($transition == 'fade') {
+                        $params['fade'] = true;
+                        $params['cssEase'] = 'linear';
+                    }
 
-                    $script = 'Y.use(\'moodle-block_slideshow-slideshow\', function(Y){'; 
-                    $script .= 'var slideshow'.$ssid.' = new Y.Slideshow({ srcNode: \'#block_slideshow_'.$ssid.'\',  previousButton:\'#block_slideshow_prev_'.$ssid.'\', nextButton:\'#block_slideshow_next_'.$ssid.'\', pages:\'.block_slideshow_page_'.$ssid.'\', currentIndex:'.$this->config->firstslide.', pauseOnChange: false, duration:'.$this->config->transitionduration.', interval:'.$this->config->interval.', transition: Y.Slideshow.PRESETS.'.$transition.'}); slideshow'.$this->instance->id.'.render(); ';
-                    $script .= 'if (Y.one(\'#block_slideshow_prev_'.$ssid.' img\') != null) { Y.one(\'#block_slideshow_prev_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('prev').'\');}';
-                    $script .= 'if (Y.one(\'#block_slideshow_next_'.$ssid.' img\') != null) { Y.one(\'#block_slideshow_next_'.$ssid.' img\').setAttribute(\'title\',\''.get_string('next').'\');}';
-                    $script .= ' });';
-                    $PAGE->requires->js_init_code($script);
+                    $PAGE->requires->css('/blocks/slideshow/css/slick.css');
+                    $PAGE->requires->css('/blocks/slideshow/css/slick-theme.css');
+                    $PAGE->requires->js_call_amd('block_slideshow/slideshow', 'init', array($params));
                 }
                 $this->content->text .= html_writer::end_tag('div');
+
+                $this->content->text .= html_writer::start_tag('noscript');
+                $this->content->text .= html_writer::tag('span', get_string('enablejavascriptformore', 'block_slideshow'));
+                $this->content->text .= html_writer::end_tag('noscript');
             }
         } else {
             $this->content->text = '';
