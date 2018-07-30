@@ -214,52 +214,7 @@ class block_slideshow extends block_base {
                     if (isset($this->config->transition)) {
                         $transition = $this->config->transition;
                     }
-/*
-                    $strprev = get_string('enablejavascriptformore', 'block_slideshow');
-                    $strnext = get_string('enablejavascriptformore', 'block_slideshow');
-                    switch ($transition) {
-                        case 'fade':
-                        case 'slideLeft':
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/left', $strprev),
-                                                                     array('id' => 'block_slideshow_prev_'.$ssid,
-                                                                           'class' => 'block_slideshow_left'));
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/right', $strnext),
-                                                                     array('id' => 'block_slideshow_next_'.$ssid,
-                                                                           'class' => 'block_slideshow_right'));
-			break;
-                        case 'slideRight':
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/left', $strnext),
-                                                                     array('id' => 'block_slideshow_next_'.$ssid,
-                                                                           'class' => 'block_slideshow_left'));
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/right', $strprev),
-                                                                     array('id' => 'block_slideshow_prev_'.$ssid,
-                                                                           'class' => 'block_slideshow_right'));
-                        break;
-                        case 'slideUp':
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/up', $strprev),
-                                                                     array('id' => 'block_slideshow_prev_'.$ssid,
-                                                                           'class' => 'block_slideshow_up'));
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/down', $strnext),
-                                                                     array('id' => 'block_slideshow_next_'.$ssid,
-                                                                           'class' => 'block_slideshow_down'));
-			break;
-                        case 'slideDown':
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/up', $strnext),
-                                                                     array('id' => 'block_slideshow_next_'.$ssid,
-                                                                           'class' => 'block_slideshow_up'));
-                            $this->content->text .= html_writer::tag('div', $OUTPUT->pix_icon('t/down', $strprev),
-                                                                     array('id' => 'block_slideshow_prev_'.$ssid,
-                                                                           'class' => 'block_slideshow_down'));
-                        break;
-                    }
-                    
-                    for ($i=0; $i<$slidesactive; $i++) {
-                        $firstslide = ($i == $this->config->firstslide)?' yui3-slideshow-active':'';
-                        $this->content->text .= html_writer::empty_tag('li', 
-                                 array('class' => 'block_slideshow_page block_slideshow_page_'.$ssid.$firstslide.' '.$transition));
-                    }
-                    $this->content->text .= '</ul>';
-*/
+
                     $params = array();
                     $params['initialSlide'] = $this->config->firstslide;
                     $params['autoplay'] = true;
@@ -268,9 +223,20 @@ class block_slideshow extends block_base {
                     $params['dots'] = true;
                     $params['dotsClass'] = 'slick-dots slick-dots-' . $this->config->pagerposition;
                     $params['infinite'] = true;
-                    if ($transition == 'fade') {
-                        $params['fade'] = true;
-                        $params['cssEase'] = 'linear';
+                    switch ($transition) {
+                        case 'fade':
+                            $params['fade'] = true;
+                            $params['cssEase'] = 'linear';
+                        break;
+                        case 'slideRight':
+                            $params['rtl'] = true;
+                        break;
+                        case 'slideUp':
+                            $params['vertical'] = true;
+                            $params['verticalSwiping'] = true;
+                        case 'slideDown':
+                            $params['rtl'] = true;
+                        break;
                     }
 
                     $PAGE->requires->css('/blocks/slideshow/css/slick.css');
