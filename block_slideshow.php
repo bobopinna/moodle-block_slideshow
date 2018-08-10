@@ -97,8 +97,11 @@ class block_slideshow extends block_base {
 
             $slidestext = '';
             $fs = get_file_storage();
+            $now = time();
             for ($i=0; $i<$this->config->slides ; $i++) {
-                if (isset($this->config->enabled[$i]) && !empty($this->config->enabled[$i])) {
+                if (isset($this->config->enabled[$i]) && !empty($this->config->enabled[$i]) &&
+                        (!isset($this->config->startslide[$i]) || ($this->config->startslide[$i] < $now)) &&
+                        (!isset($this->config->endslide[$i]) || ($this->config->endslide[$i] > $now))) {
                     $imagefiles = $fs->get_area_files($this->context->id, 'block_slideshow', 'slides', $i);
                     // Get file which was uploaded in draft area.
                     $imagefile = null;
@@ -294,6 +297,12 @@ class block_slideshow extends block_base {
                     if ($data->firstslide >= $saved) {
                         $config->firstslide = $saved;
                     }
+                }
+                if (isset($data->startslide[$i]) && !empty($data->startslide[$i])) {
+                    $config->startslide[$saved] = $data->startslide[$i];
+                }
+                if (isset($data->endslide[$i]) && !empty($data->endslide[$i])) {
+                    $config->endslide[$saved] = $data->endslide[$i];
                 }
                 if (isset($data->imageslide[$i]) && !empty($data->imageslide[$i])) {
                     $config->imageslide[$saved] = $data->imageslide[$i];

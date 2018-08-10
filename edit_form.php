@@ -37,6 +37,12 @@ class block_slideshow_edit_form extends block_edit_form {
         $elements[] = $mform->createElement('checkbox', 'config_enabled', get_string('configslide', 'block_slideshow'), get_string('configslideenabled', 'block_slideshow'));
         $elementsoptions['config_enabled']['checked'] = false;
 
+        $elements[] = $mform->createElement('date_time_selector', 'config_startslide', get_string('configslidestart', 'block_slideshow'), array('optional' => true));
+        $elementsoptions['config_startslide']['disabledif'] = array('enabled', 'notchecked');
+
+        $elements[] = $mform->createElement('date_time_selector', 'config_endslide', get_string('configslideend', 'block_slideshow'), array('optional' => true));
+        $elementsoptions['config_endslide']['disabledif'] = array('enabled', 'notchecked');
+
         $fileoptions = array('subdirs'=>0,
                              'maxfiles'=>1,
                              'maxbytes'=>$COURSE->maxbytes,
@@ -174,6 +180,14 @@ class block_slideshow_edit_form extends block_edit_form {
                           $slides[$i]->enabled = $this->block->config->enabled[$i];
                      }
                      
+                     if  (!empty($this->block->config->startslide[$i])) {
+                          $slides[$i]->startslide = $this->block->config->startslide[$i];
+                     }
+
+                     if  (!empty($this->block->config->endslide[$i])) {
+                          $slides[$i]->endslide = $this->block->config->endslide[$i];
+                     }
+
                      if  (!empty($this->block->config->imageslide[$i])) {
                           $draftitemid = '';
                           file_prepare_draft_area($draftitemid, $this->block->context->id, 'block_slideshow', 'slides', $i, $fileoptions);
