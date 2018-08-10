@@ -91,6 +91,7 @@ class block_slideshow extends block_base {
             return $this->content;
         }
 
+        $firstslide = 0;
         if (isset($this->config->slides)) {
             $ssid = $this->instance->id;
             $slidesactive = 0;
@@ -201,6 +202,9 @@ class block_slideshow extends block_base {
                             $slidestext .= html_writer::end_tag('div');
                         }
                         $slidestext .= html_writer::end_tag('div');
+                        if ($this->config->firstslide == $i) {
+                            $firstslide = $slidesactive;
+                        }
                         $slidesactive++;
                     }
                 }
@@ -212,14 +216,14 @@ class block_slideshow extends block_base {
                                                                             'class' => 'block_slideshow_slides'));
                 $this->content->text .= $slidestext;
                 $this->content->text .= html_writer::end_tag('div');
+                $params = array();
                 if ($slidesactive > 1) {
                     $transition = 'fade';
                     if (isset($this->config->transition)) {
                         $transition = $this->config->transition;
                     }
 
-                    $params = array();
-                    $params['initialSlide'] = $this->config->firstslide;
+                    $params['initialSlide'] = $firstslide;
                     $params['autoplay'] = true;
                     $params['autoplaySpeed'] = $this->config->interval * 1000;
                     $params['speed'] = $this->config->transitionduration * 1000;
@@ -241,11 +245,11 @@ class block_slideshow extends block_base {
                             $params['rtl'] = true;
                         break;
                     }
-
-                    $PAGE->requires->css('/blocks/slideshow/css/slick.css');
-                    $PAGE->requires->css('/blocks/slideshow/css/slick-theme.css');
-                    $PAGE->requires->js_call_amd('block_slideshow/slideshow', 'init', array($params));
                 }
+
+                $PAGE->requires->css('/blocks/slideshow/css/slick.css');
+                $PAGE->requires->css('/blocks/slideshow/css/slick-theme.css');
+                $PAGE->requires->js_call_amd('block_slideshow/slideshow', 'init', array($params));
                 $this->content->text .= html_writer::end_tag('div');
 
                 $this->content->text .= html_writer::start_tag('noscript');
