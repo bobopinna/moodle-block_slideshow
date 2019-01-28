@@ -51,6 +51,11 @@ class block_slideshow_edit_form extends block_edit_form {
         $elements[] = $mform->createElement('filemanager', 'config_imageslide', get_string('configslidefile', 'block_slideshow'), null,  $fileoptions);
         $elementsoptions['config_imageslide']['disabledif'] = array('enabled', 'notchecked');
 
+        $elements[] = $mform->createElement('text', 'config_alt', get_string('configslidealt', 'block_slideshow'));
+        $elementsoptions['config_alt']['type'] = PARAM_TEXT;
+        $elementsoptions['config_alt']['disabledif'] = array('config_enabled', 'notchecked');
+
+
         $choices = array();
         $choices['fullsize'] = get_string('fullsize', 'block_slideshow');
         $choices['left'] = get_string('left', 'block_slideshow');

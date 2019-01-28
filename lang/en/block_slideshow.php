@@ -38,6 +38,7 @@ $string['configslideenabled'] = 'Enable Slide';
 $string['configslidestart'] = 'Display slide from';
 $string['configslideend'] = 'Display slide until';
 $string['configslidefile'] = 'Image file';
+$string['configslidealt'] = 'Image alt text';
 $string['configslideimageposition'] = 'Image position';
 $string['configslidetitle'] = 'Slide title';
 $string['configslidecaption'] = 'Slide caption';

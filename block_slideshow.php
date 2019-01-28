@@ -139,7 +139,8 @@ class block_slideshow extends block_base {
                                                                         $i,
                                                                         $imagefile->get_filepath(),
                                                                         $imagefile->get_filename());
-                            $imagetext = html_writer::empty_tag('img', array('src' => $imageurl));
+                            $imagealt = $this->config->alt[$i];
+                            $imagetext = html_writer::empty_tag('img', array('src' => $imageurl, 'alt' => $imagealt));
                             if (!empty($this->config->link[$i])) {
                                 $imagetext = html_writer::link(new moodle_url($this->config->link[$i]),  $imagetext);
                             }     
@@ -317,6 +318,7 @@ class block_slideshow extends block_base {
                                                $saved,
                                                $fileoptions);
                 }
+                $config->alt[$saved] = isset($data->alt[$i]) && !empty($data->alt[$i])?$data->alt[$i]:'';
                 $config->imageposition[$saved] = isset($data->imageposition[$i]) && !empty($data->imageposition[$i])
                                                  ?$data->imageposition[$i]
                                                  :'';
