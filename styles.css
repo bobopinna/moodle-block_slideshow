@@ -82,6 +82,10 @@
      color: #dddddd;
 }
 
+.block_slideshow .slick-dotted.slick-slider {
+    margin-bottom: 0;
+}
+
 .block_slideshow .slick-dots {
      position: absolute;
      width: auto;
@@ -92,7 +96,7 @@
      z-index: 3;
 }
 
-.slick-dots li button:before {
+.block_slideshow .slick-dots li button:before {
      display: none;
 }
 
@@ -158,4 +162,21 @@
 .block_slideshow .slick-dots.slick-dots-bottomright {
      bottom: .5em;
      right: .5em;
+}
+
+.block_slideshow .p-3 {
+     padding: 0 !important;
+}
+
+.block_slideshow .mt-3 {
+     margin-top: 0 !important;
+}
+
+.block_slideshow.mb-3 {
+     margin-bottom: 0 !important;
+}
+
+.block_slideshow.card {
+     border: none !important;
+     background: none;
 }
