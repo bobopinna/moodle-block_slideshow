@@ -191,7 +191,7 @@ class block_slideshow extends block_base {
                                 if (!empty($this->config->link[$i])) {
                                     $titletext = html_writer::link(new moodle_url($this->config->link[$i]),  $titletext);
                                 }
-                                $slidestext .= html_writer::tag('h1', $titletext, array('class' => 'block_slideshow_captiontitle'));
+                                $slidestext .= html_writer::tag('h2', $titletext, array('class' => 'block_slideshow_captiontitle'));
                             }
                             if (!empty($this->config->caption[$i])) {
                                 $captiontext = $this->config->caption[$i];
@@ -231,6 +231,7 @@ class block_slideshow extends block_base {
                     $params['dots'] = true;
                     $params['dotsClass'] = 'slick-dots slick-dots-' . $this->config->pagerposition;
                     $params['infinite'] = true;
+ 
                     switch ($transition) {
                         case 'fade':
                             $params['fade'] = true;
