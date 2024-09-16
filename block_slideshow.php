@@ -152,13 +152,13 @@ class block_slideshow extends block_base {
                             if (isset($this->config->captionposition[$i])) {
                                 switch ($this->config->captionposition[$i]) {
                                     case 'topleft':
-                                        $captionstyle = 'top: 1em; left: 1em';
+                                        $captionstyle = 'top: 1em; left: 1em; max-width: 48%';
                                     break;
                                     case 'top':
                                         $captionstyle = 'top: 0px; left: 0px; right: 0px';
                                     break;
                                     case 'topright':
-                                        $captionstyle = 'top: 1em; right: 1em';
+                                        $captionstyle = 'top: 1em; right: 1em; max-width: 48%';
                                     break;
                                     case 'left':
                                         $captionstyle = 'left: 0px; top: 0px; bottom: 0px; max-width: 33%';
@@ -170,13 +170,13 @@ class block_slideshow extends block_base {
                                         $captionstyle = 'right: 0px; top: 0px; bottom: 0px; max-width: 33%';
                                     break;
                                     case 'bottomleft':
-                                        $captionstyle = 'bottom: 1em; left: 1em';
+                                        $captionstyle = 'bottom: 1em; left: 1em; max-width: 48%';
                                     break;
                                     case 'bottom':
                                         $captionstyle = 'bottom: 0px; left: 0px; right: 0px';
                                     break;
                                     case 'bottomright':
-                                        $captionstyle = 'bottom: 1em; right: 1em;';
+                                        $captionstyle = 'bottom: 1em; right: 1em; max-width: 48%';
                                     break;
                                     case 'fullsize':
                                         $captionstyle = 'top: 0px; bottom: 0px; left: 0px; right: 0px';
@@ -231,7 +231,6 @@ class block_slideshow extends block_base {
                     $params['dots'] = true;
                     $params['dotsClass'] = 'slick-dots slick-dots-' . $this->config->pagerposition;
                     $params['infinite'] = true;
- 
                     switch ($transition) {
                         case 'fade':
                             $params['fade'] = true;
